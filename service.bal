@@ -1,7 +1,9 @@
 import review_subgraph.datasource;
 
 import ballerina/graphql;
+import ballerina/graphql.subgraph;
 
+@subgraph:Subgraph
 service graphql:Service on new graphql:Listener(9093) {
 
     # Returns a list of reviews
@@ -14,11 +16,8 @@ service graphql:Service on new graphql:Listener(9093) {
     # Adds a new review
     # + input - The review to be added.
     # + return - The added review
-    remote function addReview(ReviewInput input) returns Review|error {
-        ReviewInfo|error result = datasource:addReview(input);
-        if result is error {
-            return error("Failed to add the review");
-        }
+    remote function addReview(ReviewInput input) returns Review {
+        ReviewInfo result = datasource:addReview(input);
         return new (result);
     }
 }
